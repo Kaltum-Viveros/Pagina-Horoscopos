@@ -1,178 +1,532 @@
-/* === Modelo tradicional de cajas ===
-   Indicamos explicitamente content-box para mostrar bordes, padding y márgenes
-   sumándose al tamaño declarado (modelo clásico).
-*/
-*,
-*::before,
-*::after {
-  box-sizing: content-box; /* modelo tradicional */
+:root {
+  --bg: #f7f8fb;
+  --surface: #ffffff;
+  --surface-2: #f2f4fb;
+  --ink: #101322;
+  --ink-2: #3a3f57;
+  --muted: #6a7190;
+  --primary: #6b4cf6;
+  --primary-2: #2a6ad3;
+  --accent: #ffbf69;
+  --ring: 3px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --shadow: 0 10px 30px rgba(16, 19, 34, .08), 0 1px 0 rgba(16, 19, 34, .06);
+  --space-1: .5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  /* Hace que los controles nativos (select, inputs) adopten esquema claro por defecto */
+  color-scheme: light;
 }
 
-:root{
-  --bg:#0f0f14;
-  --panel:#171723;
-  --ink:#e9e9f1;
-  --muted:#b7b7c7;
-  --accent:#9e7bff;
-  --accent-2:#35d0a5;
-  --danger:#ff5a7a;
-  --border:#2b2b3a;
-  --shadow: 0 8px 18px rgba(0,0,0,.35);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1020;
+    --surface: #141730;
+    --surface-2: #11142a;
+    --ink: #f3f4ff;
+    --ink-2: #cfd3ff;
+    --muted: #9aa2c7;
+    --primary: #8b79ff;
+    --primary-2: #49a1ff;
+    --accent: #f6c86b;
+    --shadow: 0 12px 36px rgba(0, 0, 0, .35), 0 1px 0 rgba(255, 255, 255, .04);
+    /* Fuerza a que los selects y menús nativos usen esquema oscuro legible */
+    color-scheme: dark;
+  }
 }
 
-html, body {
-  margin: 0; padding: 0;
-  background: linear-gradient(180deg, #0d0d13, #141425);
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: radial-gradient(120% 80% at 0% -10%, rgba(107, 76, 246, .10), transparent 40%), radial-gradient(100% 60% at 100% -10%, rgba(42, 106, 211, .10), transparent 45%), var(--bg);
   color: var(--ink);
-  font-family: system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  line-height: 1.35;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-.box { /* Clase demostrativa del modelo de caja */
-  border: 1px solid var(--border);
-  padding: 12px;
-  margin: 8px;
-  background: var(--panel);
-  border-radius: 16px; /* redondeo visible */
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 .5rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+p {
+  margin: 0 0 .75rem;
+  color: var(--ink-2);
+}
+
+small {
+  color: var(--muted);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.box {
+  background: var(--surface);
+  border: 1px solid rgba(16, 19, 34, .06);
+  border-radius: var(--radius);
+  padding: var(--space-2);
+  margin-bottom: 1rem;
   box-shadow: var(--shadow);
 }
 
 .header {
-  background: radial-gradient(1000px 200px at 20% -20%, rgba(158,123,255,.25), transparent 60%),
-              radial-gradient(800px 200px at 100% 0%, rgba(53,208,165,.2), transparent 60%),
-              var(--panel);
+  max-width: 1200px;
+  margin: 24px auto 40px;
+  padding: 0 var(--space-2);
   text-align: center;
-}
-
-.header h1 { margin: 0 0 4px 0; }
-.tagline { margin: 0; color: var(--muted); }
-
-.layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 12px; /* además del padding/margen de cada .box */
   background: transparent;
   border: none;
   box-shadow: none;
-  padding: 12px;
-  margin: 0;
+}
+
+.header h1 {
+  font-weight: 800;
+  letter-spacing: .2px;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  background: radial-gradient(var(--accent), var(--surface));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.header .tagline {
+  color: var(--muted);
+  margin-top: .25rem;
+}
+
+.header::after {
+  content: "";
+  display: block;
+  height: 4px;
+  width: min(240px, 45%);
+  margin: .8rem auto 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: .75;
+}
+
+.layout {
+  max-width: 1200px;
+  margin: 0 auto var(--space-4);
+  padding: 0 var(--space-2);
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 280px 1fr 360px;
+  grid-template-areas:
+    "sidebar form card"
+    "forecast forecast forecast";
 }
 
 .sidebar {
-  position: sticky;
-  top: 8px;
-  align-self: start;
+  grid-area: sidebar;
+  padding: var(--space-3) var(--space-2);
 }
 
-.sidebar-title { margin: 6px 4px 8px 4px; }
+.sidebar-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--primary);
+  margin-bottom: .6rem;
+}
 
 .sign-list {
   list-style: none;
-  padding-left: 0;
   margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
+  gap: .55rem;
+  max-height: calc(100vh - 260px);
+  overflow: auto;
+  scrollbar-width: thin;
 }
 
 .sign-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  background: #1b1b2b;
-  padding: 10px 12px;
-  border: 1px solid #333349;
+  gap: .6rem;
+  padding: .55rem .7rem;
+  border: 1px solid rgba(16, 19, 34, .08);
   border-radius: 12px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
   cursor: pointer;
-  transition: transform .08s ease;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
 }
-.sign-item:hover { transform: translateY(-2px); }
-.sign-chip { font-size: 20px; margin-right: 8px; }
-.sign-name { font-weight: 600; }
-.sign-range { color: var(--muted); font-size: 12px; }
 
-.content { background: transparent; border: none; box-shadow: none; }
+.sign-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(16, 19, 34, .10);
+  border-color: rgba(16, 19, 34, .18);
+}
 
-.form { max-width: 720px; }
-.form-group { display: flex; flex-direction: column; }
-.input {
-  background: #10101a;
+.sign-item:active {
+  transform: translateY(0);
+}
+
+.sign-item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ring) color-mix(in oklab, var(--primary) 45%, transparent);
+}
+
+.sign-chip {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.sign-name {
+  font-weight: 600;
   color: var(--ink);
-  border: 1px solid #32324a;
-  padding: 10px 12px;
-  border-radius: 10px;
 }
-.input:focus { outline: 2px solid var(--accent); }
 
-.form-actions { display: flex; gap: 8px; }
+.sign-range {
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+.form {
+  grid-area: form;
+  padding: var(--space-3);
+}
+
+.form h2 {
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: .8rem;
+}
+
+.form-group {
+  display: grid;
+  gap: .35rem;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-size: .95rem;
+  color: var(--ink);
+}
+
+.input {
+  width: 100%;
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid rgba(16, 19, 34, .12);
+  border-radius: 12px;
+  padding: .75rem .95rem;
+  outline: none;
+  transition: box-shadow .14s ease, border-color .14s ease, background .14s ease;
+  /* Asegura contraste en controles nativos (Chrome/Edge/Firefox modernos) */
+  -webkit-text-fill-color: currentColor;
+}
+
+.input::placeholder {
+  color: color-mix(in oklab, var(--muted) 70%, transparent);
+  opacity: 1;
+}
+
+.input:focus {
+  border-color: color-mix(in oklab, var(--primary) 55%, rgba(16, 19, 34, .2));
+  box-shadow: 0 0 0 var(--ring) color-mix(in oklab, var(--primary) 30%, transparent);
+  background: #fff;
+}
+
+.help {
+  color: var(--muted);
+  margin-top: .2rem;
+}
+
+/* === Select accesible (sólo CSS, sin tocar HTML) === */
+select.input {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, color-mix(in oklab, var(--ink) 35%, transparent) 50%),
+                    linear-gradient(135deg, color-mix(in oklab, var(--ink) 35%, transparent) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* Color del menú desplegable y opciones */
+select.input option,
+select.input optgroup {
+  color: var(--ink);
+  background-color: var(--surface);
+}
+
+/* Estados de opción resaltada/seleccionada (Chrome/Edge/Firefox) */
+select.input option:hover,
+select.input option:checked {
+  background-color: color-mix(in oklab, var(--primary) 14%, var(--surface));
+  color: var(--ink);
+}
+
+/* Safari/iOS mejoras básicas */
+@supports (-webkit-touch-callout: none) {
+  select.input {
+    background-color: var(--surface-2);
+    color: var(--ink);
+  }
+}
+
+
+.form-actions {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin-top: .25rem;
+}
 
 .btn {
-  background: linear-gradient(180deg, var(--accent), #6a58d9);
-  color: white;
-  border: none;
-  border-radius: 999px;
-  padding: 10px 16px;
+  appearance: none;
   cursor: pointer;
   font-weight: 700;
+  letter-spacing: .15px;
+  background: linear-gradient(180deg, var(--surface), var(--primary));
+  color: var(--ink);
+  border: 1px solid rgba(16, 19, 34, .14);
+  border-radius: 12px;
+  padding: .7rem 1rem;
+  margin-top: 1rem;
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease, background .12s ease;
 }
-.btn:hover { filter: brightness(1.05); }
-.btn:active { transform: translateY(1px); }
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(16, 19, 34, .12);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ring) color-mix(in oklab, var(--primary) 35%, transparent);
+}
+
 .btn-secondary {
-  background: linear-gradient(180deg, #2c2c41, #252538);
-}
-
-.card { max-width: 920px; }
-.card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  background: #17172a;
-}
-
-.sign-title { display: flex; align-items: center; gap: 10px; }
-.sign-symbol { font-size: 36px; }
-.muted { color: var(--muted); }
-
-.grid.info {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.info-item { background: #141426; }
-
-.days {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 10px;
-}
-@media (min-width: 680px) {
-  .days { grid-template-columns: repeat(2, 1fr); }
-}
-@media (min-width: 980px) {
-  .days { grid-template-columns: repeat(3, 1fr); }
-}
-
-.day-card {
-  border: 1px solid #2f2f44;
-  background: #131325;
-  padding: 10px;
-  border-radius: 14px;
-}
-.day-card h5 { margin: 0 0 6px 0; }
-.badges { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
-.badge {
-  border: 1px solid #3a3a56;
-  border-radius: 999px;
-  padding: 4px 8px;
-  font-size: 12px;
+  background: linear-gradient(180deg, var(--surface), var(--primary-2));
   color: var(--muted);
 }
 
-.footer {
-  text-align: center;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  margin-top: 8px;
+.card {
+  grid-area: card;
+  padding: var(--space-3);
+  top: 16px;
+  height: fit-content;
 }
 
-.hidden { display: none; }
+.card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: .5rem;
+  border-bottom: 1px dashed rgba(16, 19, 34, .15);
+}
+
+.sign-title {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.sign-symbol {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  filter: drop-shadow(0 8px 16px color-mix(in oklab, var(--primary-2) 25%, transparent));
+}
+
+#signName {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.grid.info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.info-item {
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid rgba(16, 19, 34, .08);
+  border-radius: 12px;
+  padding: .95rem;
+}
+
+.info-item h4 {
+  color: var(--ink);
+  margin-bottom: .25rem;
+  font-weight: 700;
+}
+
+.forecast-panel {
+  grid-area: forecast;
+  padding: var(--space-3);
+}
+
+.forecast-title {
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: .6rem;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.day-card {
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), /* filtro oscuro */
+    url('./src/bgn.jpg'); /* imagen de fondo */
+  background-size: cover;
+  background-position: center;
+  background-size: cover;
+  color: #fff; 
+  border: 1px solid rgba(16, 19, 34, .08);
+  border-radius: 14px;
+  padding: var(--space-2);
+  box-shadow: 0 10px 24px rgba(16, 19, 34, .08);
+}
+
+.day-card h5 {
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-bottom: .35rem;
+  text-transform: capitalize;
+}
+
+.badges {
+  display: flex;
+  gap: .4rem;
+  flex-wrap: wrap;
+  margin-bottom: .35rem;
+}
+
+.badge {
+  font-size: .78rem;
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: color-mix(in oklab, var(--accent) 75%, #000); 
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+}
+
+.footer {
+  max-width: 1200px;
+  margin: 0 auto var(--space-4);
+  text-align: center;
+  color: var(--muted);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px dashed rgba(16, 19, 34, .12);
+}
+
+a,
+button,
+.sign-item {
+  outline: none;
+}
+
+a:focus-visible,
+.sign-item:focus-visible {
+  box-shadow: 0 0 0 var(--ring) color-mix(in oklab, var(--primary) 35%, transparent);
+  border-color: color-mix(in oklab, var(--primary) 45%, rgba(16, 19, 34, .18));
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary) 30%, transparent);
+  color: #fff;
+}
+
+@media (max-width: 1180px) {
+  .layout {
+    grid-template-columns: 240px 1fr 340px;
+  }
+}
+
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "sidebar"
+      "form"
+      "card"
+      "forecast";
+  }
+  .card {
+    position: static;
+  }
+  .days {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .header {
+    margin: 16px var(--space-2) 12px;
+  }
+  .grid.info {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .header::after {
+    background: #000;
+  }
+  .sidebar,
+  .form,
+  .card,
+  .forecast-panel,
+  .footer {
+    box-shadow: none;
+    background: #fff;
+    border-color: #bbb;
+  }
+  .badge {
+    border-color: #999;
+    background: #eee;
+    color: #333;
+  }
+  .sign-chip {
+    background: #ddd;
+    color: #000;
+    border-color: #aaa;
+  }
+  .btn,
+  .btn-secondary {
+    display: none !important;
+  }
+}

@@ -9,88 +9,87 @@
 </head>
 <body>
   <header class="box header">
-    <h1>🔮 Mi Horóscopo</h1>
+    <h1>Mi Horóscopo</h1>
     <p class="tagline">Calcula tu <strong>edad</strong>, tu <strong>signo</strong> y mira lo que te depara el futuro.</p>
   </header>
 
-  <main class="box layout">
+  <main class="layout">
+    <!-- Columna 1: Signos -->
     <aside class="box sidebar" aria-label="Listado de signos zodiacales">
       <h2 class="sidebar-title">Signos</h2>
-      <ul id="signList" class="sign-list">
-        <!-- Rellenado por JS -->
-      </ul>
+      <ul id="signList" class="sign-list"><!-- Rellenado por JS --></ul>
     </aside>
 
-    <section class="box content" aria-live="polite">
-      <form id="formHoroscope" class="box form" autocomplete="on">
-        <h2>Personaliza tu lectura</h2>
+    <!-- Columna 2: Formulario -->
+    <form id="formHoroscope" class="box form" aria-labelledby="titulo-form" autocomplete="on">
+      <h2 id="titulo-form">Formulario</h2>
 
-        <div class="box form-group">
-          <label for="nombre">Nombre</label>
-          <input class="box input" type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+      <div class="box form-group">
+        <label for="nombre">Nombre</label>
+        <input class="box input" type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+      </div>
+
+      <div class="box form-group">
+        <label for="sexo">Sexo</label>
+        <select class="box input" id="sexo" name="sexo" required>
+          <option value="" disabled selected>Selecciona…</option>
+          <option value="F">Femenino</option>
+          <option value="M">Masculino</option>
+          <option value="X">Prefiero no decir</option>
+        </select>
+      </div>
+
+      <div class="box form-group">
+        <label for="fecha">Fecha de nacimiento</label>
+        <input class="box input" type="date" id="fecha" name="fecha" required />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="box btn">Ver mi horóscopo</button>
+        <button type="button" id="btnLimpiar" class="box btn btn-secondary">Limpiar</button>
+      </div>
+    </form>
+
+
+    <!-- Columna 3: Datos del formulario -->
+    <article id="resultado" class="box card hidden" tabindex="-1" aria-label="Datos del formulario">
+      <header class="box card-header">
+        <div class="sign-title">
+          <span id="signSymbol" class="sign-symbol" aria-hidden="true">♈</span>
+          <h3 id="signName">Aries</h3>
         </div>
+        <p id="signRange" class="muted">21 Mar — 19 Abr</p>
+      </header>
 
-        <div class="box form-group">
-          <label for="sexo">Sexo</label>
-          <select class="box input" id="sexo" name="sexo" required>
-            <option value="" disabled selected>Selecciona…</option>
-            <option value="F">Femenino</option>
-            <option value="M">Masculino</option>
-            <option value="X">Prefiero no decir</option>
-          </select>
+      <section class="box grid info">
+        <div class="box info-item">
+          <h4>Nombre</h4>
+          <p id="outNombre">—</p>
         </div>
-
-        <div class="box form-group">
-          <label for="fecha">Fecha de nacimiento</label>
-          <input class="box input" type="date" id="fecha" name="fecha" required />
+        <div class="box info-item">
+          <h4>Edad</h4>
+          <p id="outEdad">—</p>
         </div>
-
-        <div class="box form-actions">
-          <button type="submit" class="box btn">Ver mi horóscopo</button>
-          <button type="button" id="btnLimpiar" class="box btn btn-secondary">Limpiar</button>
+        <div class="box info-item">
+          <h4>Sexo</h4>
+          <p id="outSexo">—</p>
         </div>
+        <div class="box info-item">
+          <h4>Rasgos</h4>
+          <p id="outRasgos">—</p>
+        </div>
+      </section>
+    </article>
 
-        <p class="help">*Todo se procesa en tu navegador. No se envían datos a ningún servidor.</p>
-      </form>
-
-      <article id="resultado" class="box card hidden" tabindex="-1" aria-label="Resultado del horóscopo">
-        <header class="box card-header">
-          <div class="sign-title">
-            <span id="signSymbol" class="sign-symbol" aria-hidden="true">♈</span>
-            <h3 id="signName">Aries</h3>
-          </div>
-          <p id="signRange" class="muted">21 Mar — 19 Abr</p>
-        </header>
-
-        <section class="box grid info">
-          <div class="box info-item">
-            <h4>Nombre</h4>
-            <p id="outNombre">—</p>
-          </div>
-          <div class="box info-item">
-            <h4>Edad</h4>
-            <p id="outEdad">—</p>
-          </div>
-          <div class="box info-item">
-            <h4>Sexo</h4>
-            <p id="outSexo">—</p>
-          </div>
-          <div class="box info-item">
-            <h4>Rasgos</h4>
-            <p id="outRasgos">—</p>
-          </div>
-        </section>
-
-        <section class="box forecast">
-          <h4>Próximos días</h4>
-          <div id="diasContainer" class="box days"></div>
-        </section>
-      </article>
+    <!-- Fila completa: Próximos días -->
+    <section class="box forecast-panel" aria-labelledby="titulo-forecast">
+      <h2 id="titulo-forecast" class="forecast-title">Próximos días</h2>
+      <div id="diasContainer" class="days"><!-- Lo llena app.js --></div>
     </section>
   </main>
 
   <footer class="box footer">
-    <small>Hecho con ❤️ usando el <strong>modelo tradicional de cajas (content-box)</strong>. 100% cliente.</small>
+    <small>El horóscopo siempre a tu alcance</small>
   </footer>
 
   <!-- Archivo externo con la información de signos -->
