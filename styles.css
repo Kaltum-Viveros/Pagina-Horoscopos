@@ -17,7 +17,6 @@
   --space-3: 1.5rem;
   --space-4: 2rem;
   --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  /* Hace que los controles nativos (select, inputs) adopten esquema claro por defecto */
   color-scheme: light;
 }
 
@@ -33,7 +32,6 @@
     --primary-2: #49a1ff;
     --accent: #f6c86b;
     --shadow: 0 12px 36px rgba(0, 0, 0, .35), 0 1px 0 rgba(255, 255, 255, .04);
-    /* Fuerza a que los selects y menús nativos usen esquema oscuro legible */
     color-scheme: dark;
   }
 }
@@ -50,7 +48,9 @@ body {
 
 body {
   font-family: var(--font-ui);
-  background: radial-gradient(120% 80% at 0% -10%, rgba(107, 76, 246, .10), transparent 40%), radial-gradient(100% 60% at 100% -10%, rgba(42, 106, 211, .10), transparent 45%), var(--bg);
+  background: radial-gradient(120% 80% at 0% -10%, rgba(107, 76, 246, .10), transparent 40%), 
+              radial-gradient(100% 60% at 100% -10%, rgba(42, 106, 211, .10), transparent 45%), 
+              var(--bg);
   color: var(--ink);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
@@ -237,8 +237,8 @@ label {
   padding: .75rem .95rem;
   outline: none;
   transition: box-shadow .14s ease, border-color .14s ease, background .14s ease;
-  /* Asegura contraste en controles nativos (Chrome/Edge/Firefox modernos) */
   -webkit-text-fill-color: currentColor;
+  caret-color: var(--ink);
 }
 
 .input::placeholder {
@@ -249,7 +249,18 @@ label {
 .input:focus {
   border-color: color-mix(in oklab, var(--primary) 55%, rgba(16, 19, 34, .2));
   box-shadow: 0 0 0 var(--ring) color-mix(in oklab, var(--primary) 30%, transparent);
-  background: #fff;
+  background: var(--surface-2); /* en vez de blanco para que no desaparezca el texto */
+  color: var(--ink);
+  -webkit-text-fill-color: var(--ink);
+  caret-color: var(--ink);
+}
+
+/* Ajustes para autofill */
+input.input:-webkit-autofill,
+input.input:-webkit-autofill:hover,
+input.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink) !important;
+  transition: background-color 9999s ease-out;
 }
 
 .help {
@@ -257,7 +268,7 @@ label {
   margin-top: .2rem;
 }
 
-/* === Select accesible (sólo CSS, sin tocar HTML) === */
+/* Select accesible */
 select.input {
   appearance: none;
   background-image: linear-gradient(45deg, transparent 50%, color-mix(in oklab, var(--ink) 35%, transparent) 50%),
@@ -267,28 +278,24 @@ select.input {
   background-repeat: no-repeat;
 }
 
-/* Color del menú desplegable y opciones */
 select.input option,
 select.input optgroup {
   color: var(--ink);
   background-color: var(--surface);
 }
 
-/* Estados de opción resaltada/seleccionada (Chrome/Edge/Firefox) */
 select.input option:hover,
 select.input option:checked {
   background-color: color-mix(in oklab, var(--primary) 14%, var(--surface));
   color: var(--ink);
 }
 
-/* Safari/iOS mejoras básicas */
 @supports (-webkit-touch-callout: none) {
   select.input {
     background-color: var(--surface-2);
     color: var(--ink);
   }
 }
-
 
 .form-actions {
   display: flex;
@@ -405,11 +412,10 @@ select.input option:checked {
 
 .day-card {
   background-image: 
-    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), /* filtro oscuro */
-    url('./src/bgn.jpg'); /* imagen de fondo */
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('./src/bgn.jpg');
   background-size: cover;
   background-position: center;
-  background-size: cover;
   color: #fff; 
   border: 1px solid rgba(16, 19, 34, .08);
   border-radius: 14px;
